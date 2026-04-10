@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './HomePage.css'
 
+//미리보기 더미 데이터
 const PREVIEW_PAPERS = [
   {
     title: 'Attention Is All You Need',
@@ -17,14 +18,16 @@ const PREVIEW_PAPERS = [
   },
 ]
 
+// 홈페이지 -  논문 키워드, 결과 수 설정, ai요약 유무 등 설정
 function HomePage() {
   const navigate = useNavigate()
-  const [inputValue, setInputValue] = useState('')
-  const [keywords, setKeywords] = useState([])
-  const [resultCount, setResultCount] = useState(5)
-  const [summaryEnabled, setSummaryEnabled] = useState(true)
-  const [isSearching, setIsSearching] = useState(false)
+  const [inputValue, setInputValue] = useState('') // 검색 입력 텍스트
+  const [keywords, setKeywords] = useState([]) // 추가 키워드
+  const [resultCount, setResultCount] = useState(5) //결과 수 (3/5/10)
+  const [summaryEnabled, setSummaryEnabled] = useState(true) //AI요약
+  const [isSearching, setIsSearching] = useState(false) //로딩 상태
 
+  // 키워드 추가
   const addKeyword = (text) => {
     const trimmed = text.trim()
     if (trimmed && !keywords.includes(trimmed)) {
@@ -33,10 +36,12 @@ function HomePage() {
     setInputValue('')
   }
 
+  // 키워드 삭제
   const removeKeyword = (target) => {
     setKeywords(keywords.filter((k) => k !== target))
   }
 
+  // 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -47,6 +52,7 @@ function HomePage() {
     }
   }
 
+  // 검색
   const handleSearch = (e) => {
     e.preventDefault()
     if (inputValue.trim()) addKeyword(inputValue)
@@ -143,7 +149,7 @@ function HomePage() {
           <button
             type="submit"
             className={`search-btn ${isSearching ? 'loading' : ''}`}
-            disabled={keywords.length === 0 && !inputValue.trim() || isSearching}
+            disabled={(keywords.length === 0 && !inputValue.trim()) || isSearching}
           >
             {isSearching ? (
               <span className="spinner" />
@@ -161,15 +167,16 @@ function HomePage() {
 
         <div className="tags-section">
           <span className="tags-label">인기 키워드</span>
-          {['LLM', 'Transformer', 'Diffusion Model', 'RAG', 'Fine-tuning'].map((tag) => (
-            <button
-              key={tag}
-              className="tag"
-              onClick={() => addKeyword(tag)}
-            >
-              {tag}
-            </button>
-          ))}
+            {['LLM', 'Transformer', 'Diffusion Model', 'RAG', 'Fine-tuning'].map((tag) => (
+              <button
+                key={tag}
+                className={`tag ${keywords.includes(tag) ? 'tag-added' : ''}`}
+                onClick={() => addKeyword(tag)}
+                disabled={keywords.includes(tag)}
+              >
+                {keywords.includes(tag) ? '✓ ' : ''}{tag}
+              </button>
+            ))}
         </div>
 
         <section className="preview-section">
