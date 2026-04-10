@@ -3,13 +3,13 @@
 가상 데이터 사용중
 
 # 실행 방법
-yarn install
-yarn dev
+- yarn install
+- yarn dev
 
-h+enter
-o+enter
-브라우저에서 http://localhost:5173 접속
-q+enter (종료)
+- h+enter
+- o+enter
+- 브라우저에서 http://localhost:5173 접속
+- q+enter (종료)
 
 ## 기술 스택
 - React 19 + Vite
