@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import './ResultsPage.css'
-import '../api/mock.js'
+import { searchPapers } from '../api/papers.js'
 
 function ResultsPage() {
   const location = useLocation()
@@ -10,11 +10,16 @@ function ResultsPage() {
   const [expandedId, setExpandedId] = useState(null)
   const [papers, setPapers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
 
 useEffect(() => {
-  if (!keyword) return;
+  if (!keyword) {
+  navigate('/');
+  return;
+}
 
-  setIsLoading(true);
+  setLoading(true);
   setError(null);
 
   searchPapers({ keyword, limit: resultCount, withSummary: summaryEnabled })
@@ -26,7 +31,7 @@ useEffect(() => {
       setError('검색에 실패했습니다. 잠시 후 다시 시도해 주세요.');
     })
     .finally(() => {
-      setIsLoading(false);
+      setLoading(false);
     });
 }, [keyword, resultCount, summaryEnabled]); 
 
@@ -44,6 +49,17 @@ useEffect(() => {
       </div>
     )
   }
+
+  if (error) {
+  return (
+    <div className="results-page">
+      <main className="results-main">
+        <p>{error}</p>
+        <button onClick={() => navigate('/')}>돌아가기</button>
+      </main>
+    </div>
+  )
+}
 
   return (
     <div className="results-page">
